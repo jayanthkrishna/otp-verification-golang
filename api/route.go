@@ -1,12 +1,10 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
-type Config struct {
-	Router *gin.Engine
-}
-
-func (app *Config) Routes() {
-	app.Router.POST("/otp", app.sendSMS())
-	app.Router.POST("/verifyOTP", app.verifySMS())
+func GetRoutes(app *fiber.App) {
+	app.Post("/otp", sendSMS)
+	app.Post("/verifyOTP", verifySMS)
 }

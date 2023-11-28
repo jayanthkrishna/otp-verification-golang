@@ -1,16 +1,19 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/jayanthkrishna/otp-verification-golang/api"
 )
 
 func main() {
-	router := gin.Default()
+	app := fiber.New()
 
-	app := api.Config{Router: router}
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+	}))
 
-	app.Routes()
+	api.GetRoutes(app)
 
-	router.Run(":8000")
+	app.Listen(":8000")
 }

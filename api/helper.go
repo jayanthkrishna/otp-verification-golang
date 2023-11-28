@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 type jsonResonse struct {
@@ -15,11 +15,11 @@ type jsonResonse struct {
 
 var validate = validator.New()
 
-func (app *Config) validateBody(c *gin.Context, data any) error {
+func validateBody(c *fiber.Ctx, data any) error {
 
 	println("Starting validation")
 
-	if err := c.BindJSON(&data); err != nil {
+	if err := c.BodyParser(&data); err != nil {
 		println("err1 in validation")
 		return err
 	}
@@ -32,12 +32,12 @@ func (app *Config) validateBody(c *gin.Context, data any) error {
 	return nil
 }
 
-func (app *Config) writeJSON(c *gin.Context, status int, data any) {
+func writeJSON(c *fiber.Ctx, status int, data any) error {
 
-	c.JSON(status, jsonResonse{Status: status, Message: "Success", Data: data})
+	return c.JSON(jsonResonse{Status: status, Message: "Success", Data: data})
 }
 
-func (app *Config) errorJson(c *gin.Context, err error, status ...int) {
+func errorJson(c *fiber.Ctx, err error, status ...int) error {
 
 	statusCode := http.StatusBadRequest
 
@@ -46,5 +46,5 @@ func (app *Config) errorJson(c *gin.Context, err error, status ...int) {
 
 	}
 
-	c.JSON(statusCode, jsonResonse{Status: statusCode, Message: err.Error()})
+	return c.JSON(jsonResonse{Status: statusCode, Message: err.Error()})
 }

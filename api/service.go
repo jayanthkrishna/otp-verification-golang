@@ -12,7 +12,7 @@ var client *twilio.RestClient = twilio.NewRestClientWithParams(twilio.ClientPara
 	Password: envAuthToken(),
 })
 
-func (app *Config) twillioSendOTP(phonenumber string) (string, error) {
+func twillioSendOTP(phonenumber string) (string, error) {
 	params := &twilioApi.CreateVerificationParams{}
 	println("Phone Number :", phonenumber)
 	params.SetTo(phonenumber)
@@ -21,10 +21,11 @@ func (app *Config) twillioSendOTP(phonenumber string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return *resp.Sid, nil
 }
 
-func (app *Config) twillioVerifyOTP(phonenumber string, code string) error {
+func twillioVerifyOTP(phonenumber string, code string) error {
 	params := &twilioApi.CreateVerificationCheckParams{}
 
 	params.SetTo(phonenumber)
